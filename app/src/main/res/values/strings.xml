@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Tap Hamster</string>
+    <string name="Touch_hammster">Touch hummster!</string>
+    <string name="Speed_touch">Tap faster!</string>
 </resources>

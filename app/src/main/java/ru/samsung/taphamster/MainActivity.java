@@ -2,6 +2,9 @@ package ru.samsung.taphamster;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -15,11 +18,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+    static int screenWidth, screenHeight;
     int counter = 0;
+    Handler handler;
     ConstraintLayout constraintLayout;
     TextView textView;
+    TextView textTimer;
     ImageView imgHamster;
     Ghost[] ghost = new Ghost[5];
+    long startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +40,17 @@ public class MainActivity extends AppCompatActivity {
         });
         constraintLayout = findViewById(R.id.main);
         textView = findViewById(R.id.textBottom);
+        textTimer = findViewById(R.id.textTime);
         imgHamster = findViewById(R.id.imgHamster);
-        ghost[0] = new Ghost(constraintLayout, 500, 1000, 200, 200);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
+
+        ghost[0] = new Ghost(constraintLayout, 500, 400, 200, 200);
         ghost[1] = new Ghost(constraintLayout, 50, 10, 100, 100);
-        ghost[2] = new Ghost(constraintLayout, 700, 1500, 250, 180);
+        ghost[2] = new Ghost(constraintLayout, 700, 500, 250, 180);
         ghost[3] = new Ghost(constraintLayout, 500, 0, 150, 210);
         ghost[4] = new Ghost(constraintLayout, 320, 230, 180, 140);
 
@@ -51,14 +65,38 @@ public class MainActivity extends AppCompatActivity {
                     ending = " раз";
                 String s = "Потрогано "+counter+ending;
                 textView.setText(s);
-                move();
             }
         });
+
+        handler = new Handler(Looper.getMainLooper());
+        startTime = System.currentTimeMillis();
+        update();
     }
 
-    void move(){
+    void moveGhosts(){
         for (int i = 0; i < 5; i++) {
             ghost[i].move();
         }
+    }
+
+    void update(){
+        Runnable runnable = new Runnable(){
+            @Override
+            public void run() {
+                updateTime();
+                moveGhosts();
+                handler.postDelayed(this, 16);
+            }
+        };
+        handler.post(runnable);
+    }
+
+    void updateTime(){
+        long currentTime = System.currentTimeMillis() - startTime;
+        long timeSecundes = currentTime/1000;
+        String timeHour = ""+timeSecundes/60/60;
+        String timeMin = ":"+timeSecundes/60%60/10 + timeSecundes/60%60%10;
+        String timeSec = ":" + timeSecundes%60/10 + timeSecundes%60%10;
+        textTimer.setText(timeHour+timeMin+timeSec);
     }
 }

@@ -2,8 +2,6 @@ package ru.samsung.taphamster;
 
 import static ru.samsung.taphamster.MainActivity.*;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.widget.ImageView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -12,17 +10,19 @@ import java.util.Random;
 
 public class Ghost {
     ImageView img;
-    int x;
-    int y;
-    int width;
-    int stepX = 10;
+    int x, y;
+    int width, height;
+    int stepX, stepY;
 
     public Ghost(ConstraintLayout layout, int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
+        this.height = height;
 
-        stepX = new Random().nextInt(10)+1;
+        stepX = new Random().nextInt(21)-10;
+        stepY = new Random().nextInt(21)-10;
+
         img = new ImageView(layout.getContext());
         ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(width, height);
         img.setLayoutParams(params);
@@ -38,7 +38,10 @@ public class Ghost {
         if(x>screenWidth-width || x<0) {
             stepX = -stepX;
         }
-        //y+=10;
+        y += stepY;
+        if(y>screenHeight-height || y<0) {
+            stepY = -stepY;
+        }
         img.setX(x);
         img.setY(y);
     }

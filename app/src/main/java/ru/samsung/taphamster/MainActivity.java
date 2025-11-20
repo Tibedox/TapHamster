@@ -1,12 +1,10 @@
 package ru.samsung.taphamster;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
     static int screenWidth, screenHeight;
     int counter = 0;
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     TextView textTimer;
     ImageView imgHamster;
-    Ghost[] ghost = new Ghost[5];
+    Ghost[] ghost = new Ghost[25];
     long startTime;
 
     @Override
@@ -48,11 +48,13 @@ public class MainActivity extends AppCompatActivity {
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
 
-        ghost[0] = new Ghost(constraintLayout, 500, 400, 200, 200);
-        ghost[1] = new Ghost(constraintLayout, 50, 10, 100, 100);
-        ghost[2] = new Ghost(constraintLayout, 700, 500, 250, 180);
-        ghost[3] = new Ghost(constraintLayout, 500, 0, 150, 210);
-        ghost[4] = new Ghost(constraintLayout, 320, 230, 180, 140);
+        for (int i = 0; i < ghost.length; i++) {
+            int x = new Random().nextInt(screenWidth-200)+100;
+            int y = new Random().nextInt(screenHeight-200)+100;
+            int w = new Random().nextInt(100)+100;
+            int h = new Random().nextInt(100)+100;
+            ghost[i] = new Ghost(constraintLayout, x, y, w, h);
+        }
 
         imgHamster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void moveGhosts(){
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < ghost.length; i++) {
             ghost[i].move();
         }
     }
@@ -98,5 +100,7 @@ public class MainActivity extends AppCompatActivity {
         String timeMin = ":"+timeSecundes/60%60/10 + timeSecundes/60%60%10;
         String timeSec = ":" + timeSecundes%60/10 + timeSecundes%60%10;
         textTimer.setText(timeHour+timeMin+timeSec);
+        //textTimer.setText(String.format("%s%s%s", timeHour, timeMin, timeSec));
+
     }
 }

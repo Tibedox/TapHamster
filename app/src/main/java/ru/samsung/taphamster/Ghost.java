@@ -1,15 +1,11 @@
 package ru.samsung.taphamster;
-
 import static ru.samsung.taphamster.MainActivity.*;
-
 import android.widget.ImageView;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import java.util.Random;
 
 public class Ghost {
-    ImageView img;
+    private ImageView img;
     int x, y;
     int width, height;
     int stepX, stepY;
@@ -44,5 +40,9 @@ public class Ghost {
         }
         img.setX(x);
         img.setY(y);
+    }
+
+    public ImageView getImg(){
+        return img;
     }
 }
